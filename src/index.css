@@ -2,95 +2,124 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+/* Railway Traffic Control Design System - Industrial/Technical Theme
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Core Railway Control Theme */
+    --background: 213 31% 6%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 213 27% 8%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 213 27% 8%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Railway Blue Primary */
+    --primary: 214 100% 60%;
+    --primary-foreground: 213 31% 6%;
+    --primary-glow: 214 100% 70%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Steel Gray Secondary */
+    --secondary: 215 25% 15%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 215 25% 12%;
+    --muted-foreground: 217 10% 65%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 39 100% 65%;
+    --accent-foreground: 213 31% 6%;
 
-    --destructive: 0 84.2% 60.2%;
+    /* Safety Colors */
+    --success: 142 76% 36%;
+    --success-foreground: 210 40% 98%;
+    --warning: 39 100% 65%;
+    --warning-foreground: 213 31% 6%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 215 25% 20%;
+    --input: 215 25% 15%;
+    --ring: 214 100% 60%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
+    /* Railway Specific Colors */
+    --track: 215 10% 40%;
+    --train-active: 214 100% 60%;
+    --train-delayed: 0 84% 60%;
+    --train-on-time: 142 76% 36%;
+    --signal-green: 142 76% 36%;
+    --signal-red: 0 84% 60%;
+    --signal-amber: 39 100% 65%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-control: linear-gradient(180deg, hsl(var(--card)), hsl(var(--muted)));
+    --gradient-danger: linear-gradient(135deg, hsl(var(--destructive)), hsl(0 84% 70%));
 
-    --sidebar-primary: 240 5.9% 10%;
+    /* Shadows */
+    --shadow-control: 0 8px 32px -8px hsl(var(--primary) / 0.3);
+    --shadow-card: 0 4px 16px -4px hsl(213 31% 4% / 0.4);
 
-    --sidebar-primary-foreground: 0 0% 98%;
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --pulse-warning: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 
-    --sidebar-accent: 240 4.8% 95.9%;
+  }
+}
 
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+@layer components {
+  .control-panel {
+    @apply bg-gradient-to-b from-card to-muted border border-border rounded-lg shadow-[0_4px_16px_-4px_hsl(213_31%_4%_/_0.4)];
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+  .train-indicator {
+    @apply w-3 h-3 rounded-full shadow-sm transition-all duration-300;
+  }
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+  .train-indicator.active {
+    @apply bg-train-active animate-pulse;
+  }
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+  .train-indicator.delayed {
+    @apply bg-train-delayed animate-pulse;
+  }
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+  .train-indicator.on-time {
+    @apply bg-train-on-time;
+  }
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+  .signal-light {
+    @apply w-4 h-4 rounded-full border border-border/50 transition-all duration-300;
+  }
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+  .signal-light.green {
+    @apply bg-signal-green shadow-[0_0_12px_hsl(142_76%_36%_/_0.6)];
+  }
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+  .signal-light.red {
+    @apply bg-signal-red shadow-[0_0_12px_hsl(0_84%_60%_/_0.6)];
+  }
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+  .signal-light.amber {
+    @apply bg-signal-amber shadow-[0_0_12px_hsl(39_100%_65%_/_0.6)];
+  }
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+  .track-line {
+    @apply bg-track h-1 rounded-full relative;
+  }
+
+  .metric-card {
+    @apply bg-gradient-to-br from-card to-muted/50 border border-border rounded-lg p-4 transition-all duration-300;
+    box-shadow: 0 4px 16px -4px hsl(213 31% 4% / 0.4);
+  }
+
+  .metric-card:hover {
+    box-shadow: 0 8px 32px -8px hsl(var(--primary) / 0.3);
   }
 }
 
