@@ -3,91 +3,105 @@ import { Train, RailwaySection, Conflict, KPIMetrics, ManualOverride } from '@/t
 export const mockTrains: Train[] = [
   {
     id: 'TRN001',
-    number: 'IC 2047',
-    type: 'passenger',
+    number: '12301',
+    type: 'express',
     priority: 8,
     currentPosition: 15.3,
     speed: 120,
-    destination: 'Central Station',
+    destination: 'New Delhi',
     status: 'on-time',
     delay: 0,
     scheduledArrival: '14:25',
     estimatedArrival: '14:25',
-    operator: 'RailCorp'
+    operator: 'Northern Railway'
   },
   {
     id: 'TRN002',
-    number: 'FR 8841',
+    number: '18047',
     type: 'freight',
     priority: 3,
     currentPosition: 8.7,
     speed: 80,
-    destination: 'Industrial Park',
+    destination: 'Kanpur Central',
     status: 'delayed',
     delay: 12,
     scheduledArrival: '15:10',
     estimatedArrival: '15:22',
-    operator: 'FreightLines'
+    operator: 'North Central Railway'
   },
   {
     id: 'TRN003',
-    number: 'EX 1205',
+    number: '12951',
     type: 'express',
     priority: 9,
     currentPosition: 22.8,
     speed: 160,
-    destination: 'Airport Terminal',
+    destination: 'Mumbai Central',
     status: 'active',
     delay: 0,
     scheduledArrival: '14:42',
     estimatedArrival: '14:42',
-    operator: 'ExpressRail'
+    operator: 'Western Railway'
   },
   {
     id: 'TRN004',
-    number: 'LC 4412',
+    number: '56473',
     type: 'passenger',
     priority: 6,
     currentPosition: 3.2,
     speed: 95,
-    destination: 'Suburban Junction',
+    destination: 'Howrah Junction',
     status: 'approaching',
     delay: 5,
     scheduledArrival: '15:30',
     estimatedArrival: '15:35',
-    operator: 'LocalTrans'
+    operator: 'Eastern Railway'
   },
   {
     id: 'TRN005',
-    number: 'FR 7739',
-    type: 'freight',
-    priority: 2,
+    number: '12622',
+    type: 'express',
+    priority: 8,
     currentPosition: 18.9,
-    speed: 70,
-    destination: 'Port Authority',
-    status: 'delayed',
-    delay: 18,
+    speed: 140,
+    destination: 'Chennai Central',
+    status: 'on-time',
+    delay: 0,
     scheduledArrival: '16:15',
-    estimatedArrival: '16:33',
-    operator: 'CargoRail'
+    estimatedArrival: '16:15',
+    operator: 'Southern Railway'
+  },
+  {
+    id: 'TRN006',
+    number: '12009',
+    type: 'express',
+    priority: 9,
+    currentPosition: 7.4,
+    speed: 125,
+    destination: 'Secunderabad Jn',
+    status: 'delayed',
+    delay: 8,
+    scheduledArrival: '15:45',
+    estimatedArrival: '15:53',
+    operator: 'South Central Railway'
   }
 ];
 
 export const mockRailwaySection: RailwaySection = {
   id: 'SEC001',
-  name: 'Metropolitan Junction Section',
+  name: 'New Delhi - Ghaziabad Junction Section',
   length: 25.5,
   tracks: [
-    { id: 'TRK001', name: 'Track 1 (Main)', occupied: true },
-    { id: 'TRK002', name: 'Track 2 (Main)', occupied: false },
+    { id: 'TRK001', name: 'UP Main Line', occupied: true },
+    { id: 'TRK002', name: 'DN Main Line', occupied: false },
     { 
       id: 'TRK003', 
-      name: 'Track 3 (Freight)', 
+      name: 'Goods Siding', 
       occupied: false,
       maintenanceBlock: {
         start: 12.0,
         end: 14.5,
-        reason: 'Signal maintenance'
+        reason: 'Block Section maintenance'
       }
     }
   ],
@@ -98,9 +112,9 @@ export const mockRailwaySection: RailwaySection = {
     { id: 'SIG004', position: 25.5, status: 'green', type: 'exit' }
   ],
   stations: [
-    { id: 'STA001', name: 'Junction West', position: 5.2, platforms: 2 },
-    { id: 'STA002', name: 'Central Hub', position: 15.8, platforms: 4 },
-    { id: 'STA003', name: 'Junction East', position: 22.1, platforms: 2 }
+    { id: 'STA001', name: 'Shahdara', position: 5.2, platforms: 2 },
+    { id: 'STA002', name: 'Sahibabad', position: 15.8, platforms: 4 },
+    { id: 'STA003', name: 'Ghaziabad Jn', position: 22.1, platforms: 6 }
   ]
 };
 
@@ -110,8 +124,8 @@ export const mockConflicts: Conflict[] = [
     type: 'crossing',
     trains: ['TRN001', 'TRN002'],
     severity: 'medium',
-    description: 'IC 2047 and FR 8841 approaching same junction',
-    suggestedResolution: 'Delay freight train by 3 minutes',
+    description: 'Rajdhani Express (12301) and Goods train (18047) approaching same junction at Shahdara',
+    suggestedResolution: 'Hold goods train at outer signal for 4 minutes',
     timeToConflict: 8
   },
   {
@@ -119,8 +133,8 @@ export const mockConflicts: Conflict[] = [
     type: 'maintenance',
     trains: ['TRN005'],
     severity: 'high',
-    description: 'FR 7739 route blocked by signal maintenance',
-    suggestedResolution: 'Reroute to Track 2 with speed restriction',
+    description: 'Tamil Nadu Express (12622) route affected by block section maintenance',
+    suggestedResolution: 'Divert via DN Main Line with 40 kmph speed restriction',
     timeToConflict: 15
   },
   {
@@ -128,8 +142,8 @@ export const mockConflicts: Conflict[] = [
     type: 'overtaking',
     trains: ['TRN003', 'TRN004'],
     severity: 'low',
-    description: 'Express train needs to overtake local service',
-    suggestedResolution: 'Hold local train at Junction West for 2 minutes',
+    description: 'Mumbai Rajdhani (12951) needs to overtake passenger service at Sahibabad',
+    suggestedResolution: 'Hold passenger train at Platform 2 for 3 minutes',
     timeToConflict: 12
   }
 ];
@@ -147,30 +161,40 @@ export const mockAuditLog: ManualOverride[] = [
   {
     id: 'AUD001',
     timestamp: '2024-01-15 14:18:22',
-    operator: 'Controller Smith',
+    operator: 'SM Sharma',
     action: 'Manual priority change',
     trainId: 'TRN001',
-    reason: 'VIP passenger on board',
+    reason: 'Rajdhani Express - VIP passenger on board',
     originalValue: 'Priority: 8',
     newValue: 'Priority: 10'
   },
   {
     id: 'AUD002',
     timestamp: '2024-01-15 14:12:15',
-    operator: 'Controller Jones',
+    operator: 'ASM Patel',
     action: 'Route modification',
     trainId: 'TRN002',
-    reason: 'Track maintenance conflict',
-    originalValue: 'Track 3',
-    newValue: 'Track 2'
+    reason: 'Goods Siding block section maintenance',
+    originalValue: 'DN Main Line',
+    newValue: 'UP Main Line'
   },
   {
     id: 'AUD003',
     timestamp: '2024-01-15 14:05:33',
-    operator: 'Controller Davis',
-    action: 'Speed restriction override',
-    reason: 'Emergency service priority',
-    originalValue: 'Speed: 80 km/h',
-    newValue: 'Speed: 60 km/h'
+    operator: 'TXR Kumar',
+    action: 'Speed restriction imposed',
+    reason: 'Fog conditions at Sahibabad',
+    originalValue: 'Speed: 120 km/h',
+    newValue: 'Speed: 75 km/h'
+  },
+  {
+    id: 'AUD004',
+    timestamp: '2024-01-15 13:58:45',
+    operator: 'Controller Gupta',
+    action: 'Platform change',
+    trainId: 'TRN003',
+    reason: 'Mumbai Rajdhani platform optimization',
+    originalValue: 'Platform: 1',
+    newValue: 'Platform: 3'
   }
 ];

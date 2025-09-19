@@ -237,20 +237,20 @@ const TrafficControlDashboard = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-primary mb-2">
-            Railway Traffic Control System
+            Indian Railway Traffic Control System
           </h1>
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <span>Metropolitan Junction Section</span>
-              <span>•</span>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span>Last Update: {formatTime(lastUpdate)}</span>
-              </div>
-              <span>•</span>
-              <Badge variant={systemStatus.color as any}>
-                System {systemStatus.status.toUpperCase()}
-              </Badge>
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <span>New Delhi - Ghaziabad Junction Section</span>
+            <span>•</span>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span>Last Update: {formatTime(lastUpdate)}</span>
             </div>
+            <span>•</span>
+            <Badge variant={systemStatus.color as any}>
+              System {systemStatus.status.toUpperCase()}
+            </Badge>
+          </div>
         </div>
         
         <div className="flex items-center gap-2">
