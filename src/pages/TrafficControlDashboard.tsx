@@ -36,21 +36,97 @@ const TrafficControlDashboard = () => {
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
   const [isOptimizing, setIsOptimizing] = useState(false);
 
-  // Simulate real-time updates
+  // Real-time simulation with dynamic behavior
   useEffect(() => {
     const interval = setInterval(() => {
-      // Simulate train position updates
       setTrains(prevTrains => 
-        prevTrains.map(train => ({
-          ...train,
-          currentPosition: Math.min(
-            train.currentPosition + (train.speed / 3600) * 5, // 5-second updates
-            25.5 // max section length
-          )
-        }))
+        prevTrains.map(train => {
+          const timeStep = 1; // 1-second updates
+          let newPosition = train.currentPosition + (train.speed / 3600) * timeStep;
+          let newSpeed = train.speed;
+          let newStatus = train.status;
+          let newDelay = train.delay;
+          
+          // Simulate realistic train behavior
+          if (newPosition >= 25.5) {
+            newPosition = 25.5;
+            newSpeed = 0;
+            newStatus = 'on-time';
+          } else if (newPosition > 20 && train.speed > 60) {
+            // Slow down approaching destination
+            newSpeed = Math.max(40, train.speed - 10);
+            newStatus = 'approaching';
+          }
+          
+          // Randomly introduce delays or improvements
+          const random = Math.random();
+          if (random < 0.002) { // 0.2% chance per second
+            newDelay = Math.min(newDelay + 1, 15);
+            newStatus = 'delayed';
+          } else if (random > 0.998 && newDelay > 0) {
+            newDelay = Math.max(newDelay - 1, 0);
+            if (newDelay === 0) newStatus = 'on-time';
+          }
+          
+          // Update ETA based on current speed and position
+          const remainingDistance = 25.5 - newPosition;
+          const etaMinutes = newSpeed > 0 ? (remainingDistance / newSpeed) * 60 : 0;
+          const estimatedArrival = new Date(Date.now() + etaMinutes * 60000 + newDelay * 60000)
+            .toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+          
+          return {
+            ...train,
+            currentPosition: newPosition,
+            speed: newSpeed,
+            status: newStatus,
+            delay: newDelay,
+            estimatedArrival
+          };
+        })
       );
+      
+      // Dynamic conflict detection
+      setConflicts(prevConflicts => {
+        const newConflicts = [...prevConflicts];
+        
+        // Randomly add new conflicts
+        if (Math.random() < 0.001 && newConflicts.length < 5) {
+          const conflictTypes = ['signal-failure', 'track-maintenance', 'train-delay', 'weather'];
+          const severities = ['low', 'medium', 'high', 'critical'] as const;
+          
+          newConflicts.push({
+            id: `CONF${Date.now()}`,
+            type: conflictTypes[Math.floor(Math.random() * conflictTypes.length)] as any,
+            severity: severities[Math.floor(Math.random() * severities.length)],
+            description: `Auto-detected conflict at ${new Date().toLocaleTimeString()}`,
+            trains: [`T00${Math.floor(Math.random() * 5) + 1}`],
+            suggestedResolution: 'Reduce speed and maintain safe distance',
+            timeToConflict: Math.floor(Math.random() * 15) + 2
+          });
+        }
+        
+        return newConflicts;
+      });
+      
+      // Update KPIs in real-time
+      setKPIs(prev => {
+        const trainCount = trains.length;
+        const onTimeTrains = trains.filter(t => t.status === 'on-time' || t.delay === 0).length;
+        const delayedTrains = trains.filter(t => t.delay > 0).length;
+        const avgDelay = delayedTrains > 0 ? 
+          trains.reduce((sum, t) => sum + t.delay, 0) / trainCount : 0;
+        
+        return {
+          ...prev,
+          punctuality: trainCount > 0 ? Math.round((onTimeTrains / trainCount) * 100) : 100,
+          averageDelay: Math.round(avgDelay * 10) / 10,
+          activeTrains: trains.filter(t => t.speed > 0).length,
+          throughput: prev.throughput + (Math.random() < 0.1 ? 1 : 0)
+        };
+      });
+      
       setLastUpdate(new Date());
-    }, 5000);
+    }, 1000); // Update every second
 
     return () => clearInterval(interval);
   }, []);
@@ -163,15 +239,18 @@ const TrafficControlDashboard = () => {
           <h1 className="text-3xl font-bold text-primary mb-2">
             Railway Traffic Control System
           </h1>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <span>Metropolitan Junction Section</span>
-            <span>•</span>
-            <span>Last Update: {formatTime(lastUpdate)}</span>
-            <span>•</span>
-            <Badge variant={systemStatus.color as any}>
-              System {systemStatus.status.toUpperCase()}
-            </Badge>
-          </div>
+            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+              <span>Metropolitan Junction Section</span>
+              <span>•</span>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span>Last Update: {formatTime(lastUpdate)}</span>
+              </div>
+              <span>•</span>
+              <Badge variant={systemStatus.color as any}>
+                System {systemStatus.status.toUpperCase()}
+              </Badge>
+            </div>
         </div>
         
         <div className="flex items-center gap-2">

@@ -31,10 +31,13 @@ const KPIMetrics = ({ metrics }: KPIMetricsProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {/* Punctuality */}
-      <Card className="metric-card">
+      <Card className="metric-card transition-all duration-300 hover:shadow-lg">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-primary" />
+            <div className="relative">
+              <CheckCircle className="w-4 h-4 text-primary" />
+              <div className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+            </div>
             Punctuality Rate
           </CardTitle>
         </CardHeader>
@@ -46,17 +49,24 @@ const KPIMetrics = ({ metrics }: KPIMetricsProps) => {
             {getTrendIcon(metrics.punctuality, 85)}
           </div>
           <Progress value={metrics.punctuality} className="mb-2" />
-          <p className="text-xs text-muted-foreground">
-            Target: 85% | Industry average: 82%
-          </p>
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>Target: 85%</span>
+            <div className="flex items-center gap-1">
+              <div className={`w-2 h-2 rounded-full animate-pulse ${metrics.punctuality >= 85 ? 'bg-success' : 'bg-warning'}`}></div>
+              <span>Live</span>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
       {/* Throughput */}
-      <Card className="metric-card">
+      <Card className="metric-card transition-all duration-300 hover:shadow-lg">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium flex items-center gap-2">
-            <Train className="w-4 h-4 text-primary" />
+            <div className="relative">
+              <Train className="w-4 h-4 text-primary" />
+              <div className="absolute -top-1 -right-1 w-2 h-2 bg-accent rounded-full animate-pulse"></div>
+            </div>
             Throughput
           </CardTitle>
         </CardHeader>
@@ -67,7 +77,13 @@ const KPIMetrics = ({ metrics }: KPIMetricsProps) => {
             </span>
             {getTrendIcon(metrics.throughput, 20)}
           </div>
-          <p className="text-sm text-muted-foreground mb-2">trains/hour</p>
+          <div className="flex items-center justify-between text-sm mb-2">
+            <span className="text-muted-foreground">trains/hour</span>
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
+              <span>Active</span>
+            </div>
+          </div>
           <p className="text-xs text-muted-foreground">
             Capacity: 30 trains/hour
           </p>

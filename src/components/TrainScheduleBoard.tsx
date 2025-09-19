@@ -71,7 +71,9 @@ const TrainScheduleBoard = ({ trains }: TrainScheduleBoardProps) => {
           {trains.map((train) => (
             <div
               key={train.id}
-              className={`p-4 rounded-lg bg-muted/30 border ${getTrainTypeColor(train.type)} transition-all duration-300 hover:bg-muted/50`}
+              className={`p-4 rounded-lg bg-muted/30 border ${getTrainTypeColor(train.type)} transition-all duration-300 hover:bg-muted/50 ${
+                train.speed > 0 ? 'ring-2 ring-primary/20 shadow-lg' : ''
+              }`}
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-3">

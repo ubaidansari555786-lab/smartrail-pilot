@@ -80,6 +80,7 @@ export interface KPIMetrics {
   averageDelay: number; // minutes
   conflictsResolved: number;
   totalTrains: number;
+  activeTrains?: number; // trains currently in motion
   criticalDelays: number;
 }
 
