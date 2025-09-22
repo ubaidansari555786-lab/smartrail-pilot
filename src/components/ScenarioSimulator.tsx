@@ -70,16 +70,24 @@ const ScenarioSimulator = ({ trains, currentKPIs }: ScenarioSimulatorProps) => {
 
     setIsSimulating(true);
     
-    // Simulate processing delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      // Simulate processing delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
-    const scenario = predefinedScenarios.find(s => s.id === selectedScenario);
-    if (!scenario) return;
+      const scenario = predefinedScenarios.find(s => s.id === selectedScenario);
+      if (!scenario) {
+        setIsSimulating(false);
+        return;
+      }
 
-    // Generate mock simulation results based on scenario type
-    const simulatedResults = generateSimulationResults(scenario, currentKPIs);
-    setSimulationResults(simulatedResults);
-    setIsSimulating(false);
+      // Generate mock simulation results based on scenario type
+      const simulatedResults = generateSimulationResults(scenario, currentKPIs);
+      setSimulationResults(simulatedResults);
+    } catch (error) {
+      console.error('Simulation error:', error);
+    } finally {
+      setIsSimulating(false);
+    }
   };
 
   const generateSimulationResults = (scenario: Scenario, baseKPIs: KPIMetrics) => {
